@@ -56,16 +56,6 @@ def search_similar_documents(query, k=10):
     samples_df = pd.DataFrame.from_dict(samples)
     samples_df["유사도"] = scores
     samples_df.sort_values("유사도", ascending=False, inplace=True)
-
-    for _, row in samples_df.iterrows():
-        print(f"발행연도: {row.발행연도}")
-        print(f"발행월: {row.발행월}")
-        print(f"페이지: {row.페이지수}")
-        print(f"위치: {row.위치}")
-        print(f"내용: {row.processed}")
-        print(f"유사도: {row.유사도}")
-        print("=" * 50)
-        print()
     
     return samples_df
 

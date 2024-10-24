@@ -21,6 +21,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from Search import search_documents_with_filter
 from streamlit_option_menu import option_menu
 
+
 # def main_app():
 #     st.set_page_config(page_title="Cremong", layout="wide")
 #     st.title("Cremong🧸")
@@ -38,30 +39,57 @@ def main_app():
                              icons=['bi bi-robot', 'question-circle'],
                              menu_icon="app-indicator", default_index=0,
                              styles={
-            "container": {"padding": "5!important", "background-color": "#f0f0f0"},
-            "icon": {"color": "#333", "font-size": "20px"},
-            "nav-link": {"font-size": "16px", "text-align": "left", "margin": "0px", "--hover-color": "#ddd"},
-            "nav-link-selected": {"background-color": "#08c7b4"},
-        })
+                                 "container": {"padding": "5!important", "background-color": "#f0f0f0"},
+                                 "icon": {"color": "#333", "font-size": "20px"},
+                                 "nav-link": {"font-size": "16px", "text-align": "left", "margin": "0px",
+                                              "--hover-color": "#ddd"},
+                                 "nav-link-selected": {"background-color": "#08c7b4"},
+                             })
 
     if choice == "중복기사 방지 시스템":
         # 중복기사 방지 시스템 메인 기능
         # st.sidebar.subheader("키워드를 입력하면 중복된 기사를 찾아줍니다.")
-        
+
         # 탭 구성
         tab1, tab2 = st.tabs(["검색 및 결과", "원본 확인"])
-        
+
         with tab1:
             st.subheader("검색 필터")
-            
-            # 발행연도 필터 (여러 개 선택 가능)
+
+            # 발행연도와 발행연월 리스트 정의
             years = ['2019', '2020', '2021', '2022', '2023', '2024']
             year_filter = st.multiselect("발행연도", options=years, default=years)
-            
+
             # # 발행연월 필터 (여러 개 선택 가능)
             # months = [f"{year}-{month:02d}" for year in years for month in range(1, 13)]
             # month_filter = st.multiselect("발행연월", options=months)
-            
+
+
+            # months = [f"{year}-{month:02d}" for year in years for month in range(1, 13)]
+
+            # # 발행연도를 위한 multiselect 상태 관리
+            # if "year_filter" not in st.session_state:
+            #     st.session_state["year_filter"] = years  # 초기에는 모든 연도가 선택된 상태
+            #
+            # # 발행연월 필터 (여러 개 선택 가능)
+            # month_filter = st.multiselect("발행연월", options=months, key="month_filter")
+            #
+            # # 월을 선택하면 year_filter를 초기화 (기존 선택값 삭제)
+            # if month_filter:
+            #     # 선택된 월이 있으면 연도 필터를 비우고 강제로 키를 바꿔줌
+            #     st.session_state["year_filter"] = []  # 연도 필터 선택값을 모두 해제
+            #     year_filter_key = "year_filter_reset"  # 키를 새롭게 설정하여 UI 업데이트 유도
+            # else:
+            #     year_filter_key = "year_filter"  # 기본 키 설정
+            #
+            # # 발행연도 필터 (여러 개 선택 가능)
+            # year_filter = st.multiselect("발행연도", options=years, default=st.session_state["year_filter"],
+            #                              key=year_filter_key)
+
+            # # 선택된 연도와 월 필터 출력 (선택 결과를 표시)
+            # st.write("선택된 연도:", year_filter)
+            # st.write("선택된 월:", month_filter)
+
             # 검색창
             search_query = st.text_input("검색어를 입력하세요", placeholder="예: 벤자민 프랭클린")
 
@@ -70,14 +98,18 @@ def main_app():
                 if search_query:
                     with st.spinner("검색 중..."):
                         results_df = search_documents_with_filter(search_query, k=30)
-                        
+
                         # 필터링 (발행연도 및 발행연월 기준)
                         if year_filter:
                             results_df = results_df[results_df["발행연도"].isin(year_filter)]
-                        
-                        # if month_filter:
-                        #     results_df = results_df[results_df["발행연월"].isin(month_filter)]
-                        
+
+                        #발행연월, 발행연도 같이쓸 때 필터링
+                        # results_df = results_df[
+                        #         results_df["발행연도"].isin(year_filter) |
+                        #         (results_df["발행연도"] + "-" + results_df["발행월"]).isin(month_filter)
+                        #         ]
+
+
                         if not results_df.empty:
                             st.write("검색 결과:")
                             for _, row in results_df.iterrows():
@@ -93,19 +125,17 @@ def main_app():
 
         with tab2:
             st.subheader("원본 유사 문서 리스트")
-            
+
             if 'results_df' in locals() and not results_df.empty:
                 st.dataframe(results_df)
             else:
                 st.write("Tab 1에서 검색어를 입력하고 검색 버튼을 눌러주세요.")
-    
+
     elif choice == "사용 가이드":
         st.sidebar.subheader("사용 가이드")
         st.write("1. '중복기사 방지 시스템' 메뉴를 선택합니다.")
         st.write("2. 검색 필터에서 원하는 발행연도와 발행연월을 선택합니다.")
         st.write("3. 검색어를 입력하고 '검색' 버튼을 누르면 관련 기사들을 확인할 수 있습니다.")
-    
-
 
     # ##############################################
     # # Sidebar 설정
@@ -120,21 +150,21 @@ def main_app():
     # if menu_selection == "중복기사 방지 시스템":
     #     # 중복기사 방지 시스템 메인 기능
     #     # st.sidebar.subheader("키워드를 입력하면 중복된 기사를 찾아줍니다.")
-        
+
     #     # 탭 구성
     #     tab1, tab2 = st.tabs(["검색 및 결과", "원본 확인"])
 
     #     with tab1:
     #         st.subheader("검색 필터")
-            
+
     #         # 발행연도 필터 (여러 개 선택 가능)
     #         years = ['2019', '2020', '2021', '2022', '2023', '2024']
     #         year_filter = st.multiselect("발행연도", options=years, default=years)
-            
+
     #         # # 발행연월 필터 (여러 개 선택 가능)
     #         # months = [f"{year}-{month:02d}" for year in years for month in range(1, 13)]
     #         # month_filter = st.multiselect("발행연월", options=months)
-            
+
     #         # 검색창
     #         search_query = st.text_input("검색어를 입력하세요", placeholder="예: 벤자민 프랭클린")
 
@@ -143,14 +173,14 @@ def main_app():
     #             if search_query:
     #                 with st.spinner("검색 중..."):
     #                     results_df = search_documents_with_filter(search_query, k=10)
-                        
+
     #                     # 필터링 (발행연도 및 발행연월 기준)
     #                     if year_filter:
     #                         results_df = results_df[results_df["발행연도"].isin(year_filter)]
-                        
+
     #                     # if month_filter:
     #                     #     results_df = results_df[results_df["발행연월"].isin(month_filter)]
-                        
+
     #                     if not results_df.empty:
     #                         st.write("검색 결과:")
     #                         for _, row in results_df.iterrows():
@@ -166,7 +196,7 @@ def main_app():
 
     #     with tab2:
     #         st.subheader("원본 유사 문서 리스트")
-            
+
     #         if 'results_df' in locals() and not results_df.empty:
     #             st.dataframe(results_df)
     #         else:
@@ -178,6 +208,7 @@ def main_app():
     #     st.write("1. '중복기사 방지 시스템' 메뉴를 선택합니다.")
     #     st.write("2. 검색 필터에서 원하는 발행연도와 발행연월을 선택합니다.")
     #     st.write("3. 검색어를 입력하고 '검색' 버튼을 누르면 관련 기사들을 확인할 수 있습니다.")
+
 
 if __name__ == "__main__":
     main_app()

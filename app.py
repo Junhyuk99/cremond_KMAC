@@ -40,10 +40,13 @@ def main_app():
     tab1, tab2 = st.tabs(["검색 및 결과", "원본 확인"])
 
     with tab1:
-        # 필터와 검색창 추가
-        st.subheader("검색 필터")
-        year_filter = st.selectbox("발행연도", options=[2019, 2020, 2021, 2022, 2023, 2024])  # 연도 선택 필터
-        month_filter = st.selectbox("발행월", options=["01","02","03","04","05","06","07","08","09","10","11","12"])  # 월 선택 필터
+        # 발행연도 필터 (여러 개 선택 가능)
+        years = ['2019', '2020', '2021', '2022', '2023', '2024']
+        year_filter = st.multiselect("발행연도", options=years, default=years)
+            
+        # # 발행연월 필터 (여러 개 선택 가능)
+        # months = [f"{year}-{month:02d}" for year in years for month in range(1, 13)]
+        # month_filter = st.multiselect("발행연월", options=months)
 
         # 검색창
         search_query = st.text_input("검색어를 입력하세요", placeholder="예: 벤자민 프랭클린")

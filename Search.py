@@ -43,7 +43,7 @@ def get_embeddings(text_list):
     return embeddings
 
 # 유사 문서 검색 함수
-def search_similar_documents(query, k=10):
+def search_similar_documents(query, k=30):
     # 쿼리 임베딩 생성
     query_embedding = get_embeddings([query]).numpy()
     
@@ -78,7 +78,7 @@ def filter_by_keyword(samples_df, keyword):
     return samples_df
 
 # 전체 검색 및 필터링 함수
-def search_documents_with_filter(query, k=10):
+def search_documents_with_filter(query, k=30):
     # 유사 문서 검색
     results_df = search_similar_documents(query, k)
     

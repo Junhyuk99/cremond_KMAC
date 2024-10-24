@@ -55,7 +55,7 @@ def main_app():
         if st.button("검색"):
             if search_query:
                 with st.spinner("검색 중..."):
-                    results_df = search_documents_with_filter(search_query, k=10)
+                    results_df = search_documents_with_filter(search_query, k=30)
                     # 필터링 (발행연도 및 발행월 기준)
                     filtered_results = results_df[
                         (results_df["발행연도"] == str(year_filter)) &

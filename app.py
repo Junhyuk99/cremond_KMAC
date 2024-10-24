@@ -59,8 +59,8 @@ def main_app():
             year_filter = st.multiselect("발행연도", options=years, default=years)
             
             # # 발행연월 필터 (여러 개 선택 가능)
-            months = [f"{year}-{month:02d}" for year in years for month in range(1, 13)]
-            month_filter = st.multiselect("발행연월", options=months)
+            # months = [f"{year}-{month:02d}" for year in years for month in range(1, 13)]
+            # month_filter = st.multiselect("발행연월", options=months)
             
             # 검색창
             search_query = st.text_input("검색어를 입력하세요", placeholder="예: 벤자민 프랭클린")

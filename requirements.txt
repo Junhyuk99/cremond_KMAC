@@ -11,8 +11,3 @@ tqdm
 streamlit
 langchain-community
 langchain-text-splitters
-<<<<<<< HEAD
-streamlit-option-menu
-=======
-streamlit-option-menu
->>>>>>> bb050f6ac67fbd0eb7b0a25182713b6d0f83c1e5

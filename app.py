@@ -57,7 +57,7 @@ def main_app():
             st.subheader("검색 필터")
 
             # 발행연도와 발행연월 리스트 정의
-            years = ['2019', '2020', '2021', '2022', '2023', '2024']
+            years = ['2017','2018','2019', '2020', '2021', '2022', '2023', '2024']
             year_filter = st.multiselect("발행연도", options=years, default=years)
 
             # # 발행연월 필터 (여러 개 선택 가능)

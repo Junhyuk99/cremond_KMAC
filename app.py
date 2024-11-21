@@ -114,7 +114,7 @@ def main_app():
                             st.write("검색 결과:")
                             for _, row in results_df.iterrows():
                                 # st.write(f"**발행연도**: {row['발행연도']}, **발행월**: {row['발행연월']}, **페이지**: {row['페이지']}")
-                                st.write(f"**발행연도**: {row['발행연도']}, **발행월**: {row['발행월']}, **페이지**: {row['페이지수']}")
+                                st.write(f"**발행연도**: {row['발행연도']}, **발행월**: {row['발행월']}, **페이지**: {row['페이지수']}, **기사제목**: {row['기사제목']}")
                                 st.write(f"**내용**: {row['processed']}")
                                 st.write(f"**유사도**: {row['유사도']}")
                                 st.write("-" * 50)

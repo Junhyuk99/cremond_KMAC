@@ -1,10 +1,11 @@
 numpy
 pandas
-faiss-cpu         # or faiss-gpu if you're using GPU
+faiss-cpu
 sentence-transformers==2.2.2
 transformers==4.39.3
 torch
 datasets
+huggingface_hub>=0.14,<0.23
 tqdm
 streamlit
 langchain-community

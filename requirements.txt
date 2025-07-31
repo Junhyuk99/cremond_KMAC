@@ -1,11 +1,9 @@
 numpy
 pandas
-faiss-cpu  # or faiss-gpu if you're using GPU
-sentence-transformers
-transformers
+faiss-cpu         # or faiss-gpu if you're using GPU
+sentence-transformers==2.2.2
+transformers==4.39.3
 torch
-tensorflow
-tf-keras
 datasets
 tqdm
 streamlit

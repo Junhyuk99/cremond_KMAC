@@ -5,7 +5,7 @@ import urllib.request
 import faiss
 import time
 from sentence_transformers import SentenceTransformer
-from transformers import AutoTokenizer, TFAutoModel
+from transformers import AutoTokenizer, AutoModel
 import torch
 import re
 from datasets import Dataset
@@ -17,15 +17,18 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # 필수 모듈 임포트
 import pandas as pd
-from transformers import AutoTokenizer, TFAutoModel
+from transformers import AutoTokenizer, AutoModel
 # from transformers import AutoTokenizer, AutoModel
 from datasets import load_from_disk
 # import tensorflow as tf
 
 # SBERT 모델 설정
+#model_ckpt = 'BM-K/KoSimCSE-roberta-multitask'
+#tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
+#model = TFAutoModel.from_pretrained(model_ckpt, from_pt=True)
 model_ckpt = 'BM-K/KoSimCSE-roberta-multitask'
 tokenizer = AutoTokenizer.from_pretrained(model_ckpt)
-model = TFAutoModel.from_pretrained(model_ckpt, from_pt=True)
+model = AutoModel.from_pretrained(model_ckpt)
 
 # # SBERT 모델 설정
 # model_ckpt = 'BM-K/KoSimCSE-roberta-multitask'
@@ -37,10 +40,16 @@ loaded_dataset = load_from_disk("./Data/faiss_indexed_dataset")
 loaded_dataset.add_faiss_index(column="embeddings")
 
 # 임베딩 생성 함수
+#def get_embeddings(text_list):
+#    inputs = tokenizer(text_list, padding=True, truncation=True, return_tensors="tf")
+#    embeddings = model(**inputs).last_hidden_state[:, 0, :]  # CLS token 사용
+#    return embeddings
 def get_embeddings(text_list):
-    inputs = tokenizer(text_list, padding=True, truncation=True, return_tensors="tf")
-    embeddings = model(**inputs).last_hidden_state[:, 0, :]  # CLS token 사용
-    return embeddings
+    inputs = tokenizer(text_list, padding=True, truncation=True, return_tensors="pt")
+    with torch.no_grad():
+        outputs = model(**inputs)
+        embeddings = outputs.last_hidden_state[:, 0, :]  # CLS token
+    return embeddings.cpu().numpy()
 
 # 유사 문서 검색 함수
 def search_similar_documents(query, k=30):

@@ -54,7 +54,7 @@ def get_embeddings(text_list):
 # 유사 문서 검색 함수
 def search_similar_documents(query, k=30):
     # 쿼리 임베딩 생성
-    query_embedding = get_embeddings([query]).numpy()
+    query_embedding = get_embeddings([query])
     
     # 유사 문서 검색
     scores, samples = loaded_dataset.get_nearest_examples(
